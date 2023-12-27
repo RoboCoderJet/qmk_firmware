@@ -1,6 +1,5 @@
-# Copyright 2024 Robo Coder Jet
-# Build Options
-#   change yes to no to disable
+# Copyright 2023 Robo Coder Jet (@RoboCoderJet)
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
 
 # Activate Repeat key and Key Lock functionalities

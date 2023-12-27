@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "quantum.h"
-#include QMK_KEYBOARD_H
 
 // Using Miryoku layer names for readability, which is then used in the OLED below.
 enum layers {
