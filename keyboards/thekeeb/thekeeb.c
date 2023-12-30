@@ -17,6 +17,16 @@ enum layers {
   _FUN,
 };
 
+// Deactivate yellow controller LEDs after bootup
+
+void keyboard_pre_init_user(void) {
+  // Set our LED pin as output
+  setPinOutput(24);
+  // Turn the LED off
+  // (Due to technical reasons, high is off and low is on)
+  writePinHigh(24);
+}
+
 #ifdef OLED_ENABLE
 // NOTE: Most of the OLED code was originally written by Soundmonster for the Corne,
 // and has been copied directly from `crkbd/soundmonster/keymap.c`

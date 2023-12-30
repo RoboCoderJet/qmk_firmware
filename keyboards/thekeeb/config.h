@@ -10,6 +10,7 @@
 #   define OLED_FONT_H "keyboards/thekeeb/glcdfont.c"
 #endif
 
+
 // `SPLIT_HAND_PIN` can currently be defined in `info.json`,
 // but can't yet be given a value
 #define SPLIT_HAND_PIN F4
