@@ -28,51 +28,14 @@ void keyboard_pre_init_user(void) {
 }
 
 #ifdef ACHORDION_ENABLE
-// Eagerly apply Shift and Ctrl mods to improve reatoin times when working with both keyboard and mouse
-/*bool achordion_eager_mod(uint8_t mod) {
-    switch (mod) {
-        case LCTL_T:
-        case LSFT_T:
-            return true;
-
-        default:
-            return false;
-    }
-}*/
-
-// Define rules for avoidig tap mods from misfiring.
-// The return value is true to consider the tap-hold key held or false to consider it tapped.
-bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, uint16_t other_keycode, keyrecord_t *other_record) {
-    // Consider the following chords as holds to allow button tap mods on Miroku Colemak-DH:
-    // MIRYOKU_ALTERNATIVES_BASE_COLEMAKDH_FLIP.
-    // This makes one-handed copy&paste shortcuts possible.
-    /*switch (tap_hold_keycode) {
-         case LT(U_BUTTON, KC_Z):
-         case LT(U_BUTTON, KC_SLSH):
-             return true;
-    }*/
-
-    // Allow thumb cluster to chord.  The code below asumes a split keybard where rows
-    // are typically doubled up so that the first MATRIX_ROWS / 2 rows are the left hand
-    // and the following MATRIX_ROWS / 2 rows are the right hand.
-    if (tap_hold_record->event.key.row % (MATRIX_ROWS / 2) == (MATRIX_ROWS / 2) - 1) {
-        return true;
-    }
-
-    // Allow same-hand holds for keys a row or more apart
-    if (tap_hold_record->event.key.row != other_record->event.key.row) {
-        return true;
-    }
-
-    return achordion_opposite_hands(tap_hold_record, other_record);
-}
-
+// Define standard callouts to activete the feature
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_achordion(keycode, record)) {
         return false;
     }
     return true;
 }
+
 void matrix_scan_user(void) {
     achordion_task();
 }

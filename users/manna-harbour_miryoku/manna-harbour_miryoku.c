@@ -7,6 +7,7 @@
 
 #include "manna-harbour_miryoku.h"
 
+#include "features/achordion.h"
 
 // Additional Features double tap guard
 
@@ -88,4 +89,57 @@ combo_t key_combos[COMBO_COUNT] = {
   #endif
   COMBO(thumbcombos_fun, KC_APP)
 };
+#endif
+
+#ifdef ACHORDION_ENABLE
+// Eagerly apply Shift and Ctrl mods to improve reatoin times when working with both keyboard and mouse
+bool achordion_eager_mod(uint8_t mod) {
+    switch (mod) {
+    case MOD_LSFT:
+    case MOD_RSFT:
+    case MOD_LCTL:
+    case MOD_RCTL:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+// Define rules for avoidig tap mods from misfiring.
+// The return value is true to consider the tap-hold key held or false to consider it tapped.
+bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, uint16_t other_keycode, keyrecord_t *other_record) {
+    // Consider the following chords as holds to allow button tap mods on Miroku Colemak-DH:
+    // MIRYOKU_ALTERNATIVES_BASE_COLEMAKDH_FLIP.
+    // This makes one-handed copy&paste shortcuts possible.
+    switch (tap_hold_keycode) {
+         case LT(U_BUTTON, KC_Z):
+         case LT(U_BUTTON, KC_SLSH):
+             return true;
+    }
+
+    // Allow thumb cluster to chord.  The code below asumes a split keybard where rows
+    // are typically doubled up so that the first MATRIX_ROWS / 2 rows are the left hand
+    // and the following MATRIX_ROWS / 2 rows are the right hand.
+    if (tap_hold_record->event.key.row % (MATRIX_ROWS / 2) == (MATRIX_ROWS / 2) - 1) {
+        return true;
+    }
+
+    // Allow same-hand holds for keys a row or more apart
+    if (tap_hold_record->event.key.row != other_record->event.key.row) {
+        return true;
+    }
+
+    return achordion_opposite_hands(tap_hold_record, other_record);
+}
+
+uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
+  switch (tap_hold_keycode) {
+    case LGUI_T(KC_A):
+    case LGUI_T(KC_O):
+      return 0;  // Bypass Achordion for these keys.
+  }
+
+  return 800;  // Otherwise use a timeout of 800 ms.
+}
 #endif
