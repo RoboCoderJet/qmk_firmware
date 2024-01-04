@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "quantum.h"
+#include "features/achordion.h"
 
 // Using Miryoku layer names for readability, which is then used in the OLED below.
 enum layers {
@@ -18,7 +19,6 @@ enum layers {
 };
 
 // Deactivate yellow controller LEDs after bootup
-
 void keyboard_pre_init_user(void) {
   // Set our LED pin as output
   setPinOutput(24);
@@ -26,6 +26,24 @@ void keyboard_pre_init_user(void) {
   // (Due to technical reasons, high is off and low is on)
   writePinHigh(24);
 }
+
+// --------------------------------------------------------------
+// BEGIN: Achordion feature block
+//
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+  if (!process_achordion(keycode, record)) { return false; }
+  // Your macros ...
+
+  return true;
+}
+
+void matrix_scan_user(void) {
+  achordion_task();
+}
+
+//
+// END: Achordion feature block
+// --------------------------------------------------------------
 
 #ifdef OLED_ENABLE
 // NOTE: Most of the OLED code was originally written by Soundmonster for the Corne,
