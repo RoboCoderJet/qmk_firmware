@@ -3,6 +3,9 @@
 
 #pragma once
 
+// Enable Achordion feature 
+#define ACHORDION_ENABLE
+
 // Not yet available in `info.json`
 #ifdef OLED_ENABLE
 #   define OLED_DISPLAY_128X32
