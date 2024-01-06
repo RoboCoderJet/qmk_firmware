@@ -7,7 +7,10 @@
 
 #include "manna-harbour_miryoku.h"
 
-#include "features/achordion.h"
+#ifdef ACHORDION_ENABLE
+  #include "features/achordion.h"
+  #define ACHORDION_STREAK
+#endif
 
 // Additional Features double tap guard
 
@@ -118,15 +121,11 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, ui
              return true;
     }
 
-    // Allow thumb cluster to chord.  The code below asumes a split keybard where rows
-    // are typically doubled up so that the first MATRIX_ROWS / 2 rows are the left hand
-    // and the following MATRIX_ROWS / 2 rows are the right hand.
-    if (tap_hold_record->event.key.row % (MATRIX_ROWS / 2) == (MATRIX_ROWS / 2) - 1) {
-        return true;
-    }
-
-    // Allow same-hand holds for keys a row or more apart
-    if (tap_hold_record->event.key.row != other_record->event.key.row) {
+    // Allow same hand holds with thumb cluster keys.
+    // The code below asumes a split keyboard with thumb clusters being in the last row of the respective half.
+    // Rows are typically doubled up in a matirx of a split keybaord so that the first MATRIX_ROWS / 2 rows are
+    // the left hand and the following MATRIX_ROWS / 2 rows are the right hand.
+    if ((tap_hold_record->event.key.row == (MATRIX_ROWS / 2)) || (tap_hold_record->event.key.row == MATRIX_ROWS)) {
         return true;
     }
 
@@ -141,5 +140,19 @@ uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
   }
 
   return 800;  // Otherwise use a timeout of 800 ms.
+}
+
+uint16_t achordion_streak_timeout(uint16_t tap_hold_keycode) {
+    if (IS_QK_LAYER_TAP(tap_hold_keycode)) {
+        return 0; // Disable streak detection on layer-tap keys.
+    }
+
+    // Otherwise, tap_hold_keycode is a mod-tap key.
+    uint8_t mod = mod_config(QK_MOD_TAP_GET_MODS(tap_hold_keycode));
+    if ((mod & (MOD_LSFT | MOD_RSFT) != 0)) {
+        return 50; // A shorter streak timeout for Shift mod-tap keys.
+    } else {
+        return 120; // A longer timeout otherwise.
+    }
 }
 #endif

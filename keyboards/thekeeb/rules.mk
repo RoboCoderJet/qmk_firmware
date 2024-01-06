@@ -7,6 +7,7 @@
 # KEY_LOCK_ENABLE = yes
 
 # Achordion feature
+ACHORDION_ENABLE=yes
 SRC += features/achordion.c
 
 # Target board RP2024 Community Edition

@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "quantum.h"
-#include "features/achordion.h"
+#ifdef ACHORDION_ENABLE
+  #include "features/achordion.h"
+#endif
 
 // Using Miryoku layer names for readability, which is then used in the OLED below.
 enum layers {
