@@ -133,13 +133,16 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t *tap_hold_record, ui
 }
 
 uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
-  switch (tap_hold_keycode) {
-    case LGUI_T(KC_A):
-    case LGUI_T(KC_O):
-      return 0;  // Bypass Achordion for these keys.
-  }
+    switch (tap_hold_keycode) {
+        case LT(U_FUN, KC_DEL):
+        case LT(U_NUM, KC_BSPC):
+        case LT(U_SYM, KC_ENT):
+        case LT(U_MOUSE, KC_TAB):
+        case LT(U_MEDIA, KC_ESC):
+            return 0; // Bypass Achordion for these keys.
+    }
 
-  return 800;  // Otherwise use a timeout of 800 ms.
+    return 800; // Otherwise use a timeout of 800 ms.
 }
 
 uint16_t achordion_streak_timeout(uint16_t tap_hold_keycode) {
